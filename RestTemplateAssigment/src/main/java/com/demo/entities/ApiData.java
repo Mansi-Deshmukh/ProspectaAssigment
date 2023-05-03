@@ -9,19 +9,14 @@ import lombok.NoArgsConstructor;
 
 
 // @Entity
-// @Data
-// @NoArgsConstructor
-// @AllArgsConstructor
+@Data
 public class ApiData {
     
     private Integer count;
 
     private List<Entries> entries;
 
-    public ApiData(Integer count, List<Entries> entries) {
-        this.count = count;
-        this.entries = entries;
-    }
+   
 
     
 }

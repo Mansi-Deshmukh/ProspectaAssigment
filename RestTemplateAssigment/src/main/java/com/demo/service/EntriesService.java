@@ -11,4 +11,6 @@ public interface EntriesService {
     
     public List<EntriesDTO> getTitleDescription(List<Entries> data,String category) throws EntryNotFoundException ;
     public String createApi(Entries entries) throws InvalidInputException;
+
+    public List<Entries> getAll();
 }
