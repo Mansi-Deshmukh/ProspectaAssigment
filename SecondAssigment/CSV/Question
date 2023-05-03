@@ -1,0 +1,101 @@
+Question.1 How will you tackel above challenge?
+Answer:
+The challenge involves processing a CSV file that contains formulas and cell references, and evaluating the formulas to produce a new CSV file with the calculated values.
+
+Here's how I would tackle this challenge:
+
+Read the input CSV file line by line using a BufferedReader/ Scanner. Im using Scanner here.
+For each line, split the values by comma to get an array of strings.
+Iterate over the array of strings and evaluate each value.
+If the value starts with "=", it is a formula. Evaluate the formula using the cell references and the values from the input CSV file.
+If the value does not start with "=", it is a value. Add it to a new array of values.
+After iterating over all the values, join the array of values by comma to form a new line, and write it to a new CSV file using a FileWriter.
+Here's some sample code that implements this algorithm:
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class CSVProcessor {
+
+    public static void main(String[] args) {
+        try {
+            Map<String, String> cellValues = new HashMap<>();
+            Scanner br = new Scanner(System.in);
+            String line = br.nextLine();
+            while (line != null) {
+                String[] cells = line.split(", ");
+                for (String cell : cells) {
+                    String[] parts = cell.split(": ");
+                    String cellName = parts[0];
+                    String cellValue = parts[1];
+                    if (cellValue.startsWith("=")) {
+                        cellValue = evaluateFormula(cellValue, cellValues);
+                    }
+                    cellValues.put(cellName, cellValue);
+                }
+            }
+            br.close();
+            FileWriter fw = new FileWriter("output.csv");
+            for (String cellName : cellValues.keySet()) {
+                fw.write(cellName + ": " + cellValues.get(cellName) + ", ");
+            }
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String evaluateFormula(String formula, Map<String, String> cellValues) {
+        Pattern pattern = Pattern.compile("[A-Z]+[1-9]+");
+        Matcher matcher = pattern.matcher(formula);
+        while (matcher.find()) {
+            String cellReference = matcher.group();
+            String cellValue = cellValues.get(cellReference);
+            if (cellValue != null) {
+                formula = formula.replace(cellReference, cellValue);
+            } else {
+                throw new IllegalArgumentException("Undefined cell reference: " + cellReference);
+            }
+        }
+        String expression = formula.substring(1);
+        String[] operands = expression.split("[+\\-*/]");
+        int operand1 = Integer.parseInt(operands[0]);
+        int operand2 = Integer.parseInt(operands[1]);
+        
+        // if(we have more that one operator then we can we swith case) (since not given in example im using only + in main program)
+        char operator = expression.charAt(operands[0].length());
+        switch (operator) {
+            case '+':
+                return Integer.toString(operand1 + operand2);
+            case '-':
+                return Integer.toString(operand1 - operand2);
+            case '*':
+                return Integer.toString(operand1 * operand2);
+            case '/':
+                return Integer.toString(operand1 / operand2);
+            default:
+                throw new IllegalArgumentException("Invalid operator: " + operator);
+        }
+    }
+
+}
+
+
+
+
+Question 3 : How might a user break your code?
+
+Answer: There are several ways a user could potentially break the code when processing the CSV file:
+1. Input file format: If the user provides an input file that is not in the expected format (e.g., has missing columns or rows), this could cause errors during processing.
+2. Invalid formulas: If the user provides formulas that are not valid (e.g., contain syntax errors or unknown functions/operators), this could cause the program to crash or produce incorrect results.
+3. Circular references: If the user provides formulas that have circular references, this could cause an infinite loop or stack overflow error. (By passing first word as a integer which is irrelevant type of data
+there might be chance of circular dependency error because in the formula A is dependent on C and C is dependent on A .
+ )
+4. Division by zero errors: If the user provides formulas that contain division by zero, this could cause errors during processing.
+To prevent these errors, we should include input validation and error handling mechanisms in code. This could include checking for the input file format, validating formulas before evaluating them, handling circular references and division by zero errors, and providing clear error messages to the user if something goes wrong.
