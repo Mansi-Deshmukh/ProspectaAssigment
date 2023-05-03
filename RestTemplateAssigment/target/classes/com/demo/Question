@@ -1,0 +1,15 @@
+Question : what are the key things you would consider when creating/consuming an API to ensure that it is secure and reliable?
+
+Answer :
+
+There are few things we can keep in mind while creating/ consuming as API to ensure that it is secure and reliable :
+1. Authentication and Authorization : To ensure that api is consumed by only user ans data should be used by authorized user authenticaition and authorisation is import. We can achive this by OAuth, JWt etc.
+
+2. Encryption : To make sure that sensitive infomartion in not leaked encryption is important.
+
+3. Documentation : Documentation is necessary because of user understanding , what is the api for, what data we get using api , how to use api, etc.
+
+4. Testing : before deploying it is important to test api to prevent from any error.
+
+5. Error-handling/ Exception handling : To ensure right flow of api , and making sure that while thowing error implemention details are not showing it is important to handle exception properly other attacker can misuse information.
+
